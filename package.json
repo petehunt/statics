@@ -1,0 +1,26 @@
+{
+  "name": "statics",
+  "version": "0.0.0",
+  "description": "static assets in npm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/petehunt/statics"
+  },
+  "keywords": [
+    "statics",
+    "react",
+    "npm",
+    "static",
+    "assets",
+    "packaging"
+  ],
+  "author": "Pete Hunt",
+  "license": "Apache 2",
+  "bugs": {
+    "url": "https://github.com/petehunt/statics/issues"
+  }
+}
