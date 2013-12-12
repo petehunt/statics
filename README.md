@@ -1,5 +1,9 @@
 # statics
 
+## Mission
+
+Package static assets in npm.
+
 ## Goals
 
 Let component authors include static assets and resolve them to public URLs at runtime. And
