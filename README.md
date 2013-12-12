@@ -22,8 +22,8 @@ Actually implementing optimizations, or actually inserting anything into the DOM
 
 ```
 {
-  name: "MyPackage",
-  statics: {
+  "name": "MyPackage",
+  "statics": {
     MyResourceID: "./statics/image.png"
   }
 }
