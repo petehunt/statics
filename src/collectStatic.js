@@ -41,12 +41,12 @@ function getPackageJsonPath(absoluteModulePath) {
   var candidate = absoluteModulePath;
   var prevCandidate = null;
   while (candidate !== prevCandidate) {
-    prevCandidate = candidate;
-    candidate = path.dirname(candidate);
     var packageJsonPath = path.join(candidate, 'package.json');
     if (existsSync(packageJsonPath)) {
       return packageJsonPath;
     }
+    prevCandidate = candidate;
+    candidate = path.dirname(candidate);
   }
   return null;
 }
