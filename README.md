@@ -29,6 +29,8 @@ Actually implementing optimizations, or actually inserting anything into the DOM
 }
 ```
 
+If you called it `rawStatics` they wouldn't be optimized.
+
   * Get information about the asset at runtime:
 
 ```
