@@ -16,7 +16,7 @@ function getAssetDescription(staticRoot, id, absolutePath) {
   };
 
   // Images need a more specific description
-  if (mt.indexOf('image/') === 0) {
+  if (mt && mt.indexOf('image/') === 0) {
     var dims = imagesize(absolutePath);
     description.width = dims.width;
     description.height = dims.height;
@@ -39,8 +39,9 @@ function existsSync(path) {
 
 function getPackageJsonPath(absoluteModulePath) {
   var candidate = absoluteModulePath;
-  // TODO: windows!
-  while (candidate.length !== '/') {
+  var prevCandidate = null;
+  while (candidate !== prevCandidate) {
+    prevCandidate = candidate;
     candidate = path.dirname(candidate);
     var packageJsonPath = path.join(candidate, 'package.json');
     if (existsSync(packageJsonPath)) {
@@ -65,11 +66,11 @@ function collectStatic(entrypoint, staticRoot, destDir) {
     function processStatics(statics) {
       for (var k in statics) {
         var assetName = packageJson.name + '/' + k;
-        var absolutePath = path.join(path.dirname(packageJsonPath, statics[k]));
+        var absolutePath = path.join(path.dirname(packageJsonPath), statics[k]);
         var desc = getAssetDescription(staticRoot, assetName, absolutePath);
         config[assetName] = desc;
         // copy file to the right place
-        var destPath = path.join(destDir, statics[k]);
+        var destPath = path.join(destDir, packageJson.name, statics[k]);
         fs.mkdirpSync(path.dirname(destPath));
         fs.copySync(absolutePath, destPath);
       }
@@ -83,7 +84,9 @@ function collectStatic(entrypoint, staticRoot, destDir) {
       processStatics(packageJson.rawStatics);
     }
 
-  }, function() {}));
+  }, function() {
+    console.log('require(\'statics\').configure(' + JSON.stringify(config) + ');');
+  }));
 }
 
-collectStatic('/Users/phunt/Projects/statics/sample/sample.js');
+module.exports = collectStatic;
