@@ -8,7 +8,7 @@ Package static assets in npm.
 
 Let component authors include static assets and resolve them to public URLs at runtime. And
 support future advanced optimization strategies, including static analysis. It should work
-transparently on the client and server and not require a specific JS packaging solution.
+transparently on the client and server and not require a specific JS packaging solution. Should not need to download the whole static map. Should be able to opt out of optimizing some files.
 
 ## Non-goals
 
