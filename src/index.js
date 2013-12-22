@@ -1,16 +1,5 @@
-var staticMap = {};
-
-function configure(partialStaticMap) {
-  for (var k in partialStaticMap) {
-    staticMap[k] = partialStaticMap[k];
-  }
+if (typeof window === 'undefined') {
+  module.exports = require('./server');
+} else {
+  module.exports = require('./browser');
 }
-
-function resolveStatic(id) {
-  return staticMap[id];
-}
-
-module.exports = {
-  configure: configure,
-  resolveStatic: resolveStatic
-};

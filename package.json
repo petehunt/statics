@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "static assets in npm",
   "main": "src/index.js",
+  "browser": "src/browser.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
