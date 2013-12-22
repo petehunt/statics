@@ -11,7 +11,7 @@ module.exports = {
   // Server-specific interface
   getHeadMarkupFor: function(f) {
     stack.push([]);
-    f.apply(this, Array.prototype.slice.call(arguments).slice(1));
+    f();
     return stack.pop().map(function(item) {
       if (item.type === 'stylesheet') {
         return '<link rel="stylesheet" href=' + JSON.stringify(item.href) + ' type="text/css" />';

@@ -3,6 +3,7 @@
 // be created in the future.
 
 var fs = require('fs-extra');
+var glob = require('glob').sync;
 var mdeps = require('module-deps');
 var path = require('path');
 var through = require('through');
@@ -33,7 +34,7 @@ function getPackageJsonPath(absoluteModulePath) {
 function collectStatic(entrypoint, destDir) {
   var packageJsonPathsVisited = {};
 
-  mdeps([entrypoint]).pipe(through(function(data) {
+  mdeps([path.resolve(entrypoint)]).pipe(through(function(data) {
     var packageJsonPath = getPackageJsonPath(data.id);
     if (!packageJsonPath || packageJsonPathsVisited[packageJsonPath]) {
       return;
@@ -42,7 +43,9 @@ function collectStatic(entrypoint, destDir) {
     var packageJson = JSON.parse(fs.readFileSync(packageJsonPath, {encoding: 'utf8'}));
 
     if (packageJson.staticRoot) {
-      fs.copySync(path.join(packageJsonPath, '..', packageJson.staticRoot, '*'), destDir);
+      glob(path.join(packageJsonPath, '..', packageJson.staticRoot, '*')).forEach(function(file) {
+        fs.copySync(file, path.join(destDir, path.basename(file)));
+      });
     }
   }, function() {
   }));
