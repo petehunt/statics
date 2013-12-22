@@ -2,121 +2,21 @@
 
 ## Mission
 
-Package static assets in npm.
+Package static assets in npm. Support client and server.
 
-## Goals
+## API for component authors
 
-Let component authors include static assets and resolve them to public URLs at runtime. And
-support future advanced optimization strategies, including static analysis. It should work
-transparently on the client and server and not require a specific JS packaging solution. Should not need to download the whole static map. Should be able to opt out of optimizing some files.
+  * `process.env.STATIC_ROOT`: this is where your static files will live at runtime
+  * `staticRoot` in `package.json`: this is where you put your static files. they'll be available at the root above
 
-## Non-goals
+## Optional API
 
-Actually implementing optimizations, or actually inserting anything into the DOM or HTML.
+This should be a separate `npm` package probably.
 
-## For the package author
+  * `require('statics').requireStylesheet()`: ensure a stylesheet is in the document. must contain only a literal string, concat operator or `process.env.STATIC_ROOT`.
 
-### Basic usage
+## API for users
 
-  * Add a `static` key to your `package.json`:
+  * run `collect-static mymodule builddir/` and upload `builddir/` to `http://mycdn.com/statics/`
+  * run your app with `STATIC_ROOT=http://mycdn.com/statics/` (trailing slash required)
 
-```
-{
-  "name": "MyPackage",
-  "statics": {
-    MyResourceID: "./statics/image.png"
-  }
-}
-```
-
-If you called it `rawStatics` they wouldn't be optimized.
-
-  * Get information about the asset at runtime:
-
-```
-require('statics').resolveStatic('MyPackage/MyResourceID')
-```
-
-This will return a JS object describing the asset called an *asset description*. **NOTE:** `resolveStatic()`
-must be invoked with the name `resolveStatic` and must be passed a literal string to allow for static
-analysis.
-
-The string literal is the `name` of the package specified in `package.json` followed by a `/` and then the ID
-of the static resource.
-
-### Asset descriptions
-
-#### Images
-
-The reason these have a custom descriptor is to support optimizers that may use spriting.
-
-```
-{
-  "href": "//mycdn.com/image.jpg",
-  "left": 0,
-  "top": 0,
-  "width": 240,
-  "height": 240
-}
-```
-
-#### Stylesheets
-
-These should be valid CSS. If an optimizer performs spriting of images it's repsonsible for changing `url()` in the stylesheet and adding
-the appropriate CSS properties to reflect the new path and sprite location.
-
-Stylesheets may be concatenated.
-
-```
-{
-  "href": "//mycdn.com/stylesheet.css"
-}
-```
-
-#### All other files
-
-```
-{
-  "href": "//mycdn.com/whatever.bin"
-}
-```
-
-## For the package consumer
-
-Just `npm install` the package and `require()` what you need.
-
-### Command-line tool
-
-Then run `statics --output=./statics/ --map=staticmap.js --url=//mycdn.com/statics/ ./`
-
-This takes all the static resources that a given package (`./`) depends on (by traversing
-its CommonJS dependencies and looking at the `statics` field in `package.json`) and copies them
-to known locations inside of the output dir (`./statics/`). The user then uploads this dir to
-the URL provided (`//mycdn.com/statics/`). Their app needs to `require('./staticmap')` to
-tell the runtime the information about the statics.
-
-Relative paths between the files in a given package need to remain intact or be rewritten by
-the `statics` tool.
-
-`staticmap.js` will look something like this:
-
-```
-require('statics').configure({
-  "MyPackage/MyResourceID": {
-    "href": "//mycdn.com/statics/MyPackage/statics/myimage.png",
-    "left": 0,
-    "top": 0,
-    "width": 240,
-    "height": 240
-  }
-});
-```
-
-### Development server
-
-We could provide an `express` middleware that does everything the `statics` tool does but at runtime.
-
-### Optimizers
-
-People should be able to write their own `statics` tool which does stuff like image spriting, CSS concat,
-and running stuff like SASS.
