@@ -19,4 +19,4 @@ This should be a separate `npm` package probably.
 
   * run `collect-static mymodule builddir/` and upload `builddir/` to `http://mycdn.com/statics/`
   * run your app with `STATIC_ROOT=http://mycdn.com/statics/` (trailing slash required)
-
+    * if using browserify, use the `envify` transform
