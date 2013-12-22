@@ -1,4 +1,3 @@
-var STATIC_ROOT = require('./staticRoot');
 var stack = [];
 
 module.exports = {
@@ -6,7 +5,7 @@ module.exports = {
     if (stack.length === 0) {
       throw new Error('not in a getHeadMarkupFor() block');
     }
-    stack[stack.length - 1].push({type: 'stylesheet', href: STATIC_ROOT + href});
+    stack[stack.length - 1].push({type: 'stylesheet', href: href});
   },
 
   // Server-specific interface
