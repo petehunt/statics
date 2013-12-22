@@ -1,6 +1,6 @@
 {
   "name": "statics",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "static assets in npm",
   "main": "src/index.js",
   "browser": "src/browser.js",
