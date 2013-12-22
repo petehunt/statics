@@ -13,7 +13,7 @@ Package static assets in npm. Support client and server.
 
 This should be a separate `npm` package probably.
 
-  * `require('statics').requireStylesheet()`: ensure a stylesheet is in the document. must contain only a literal string, concat operator or `process.env.STATIC_ROOT`.
+  * `require('statics').requireStylesheet("myfile.css")`: ensure a stylesheet is in the document. must contain only a literal string, concat operator or `process.env.STATIC_ROOT`.
 
 ## API for users
 
