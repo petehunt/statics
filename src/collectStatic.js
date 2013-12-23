@@ -31,8 +31,15 @@ function getPackageJsonPath(absoluteModulePath) {
   return null;
 }
 
-function collectStatic(entrypoint, destDir) {
+function defaultPlugin(destDir, files) {
+  files.forEach(function(file) {
+    fs.copySync(file, path.join(destDir, path.basename(file)));
+  });
+}
+
+function collectStatic(entrypoint, destDir, pluginName) {
   var packageJsonPathsVisited = {};
+  var plugin = pluginName ? require(pluginName) : defaultPlugin;
 
   mdeps([path.resolve(entrypoint)]).pipe(through(function(data) {
     var packageJsonPath = getPackageJsonPath(data.id);
@@ -43,9 +50,7 @@ function collectStatic(entrypoint, destDir) {
     var packageJson = JSON.parse(fs.readFileSync(packageJsonPath, {encoding: 'utf8'}));
 
     if (packageJson.staticRoot) {
-      glob(path.join(packageJsonPath, '..', packageJson.staticRoot, '*')).forEach(function(file) {
-        fs.copySync(file, path.join(destDir, path.basename(file)));
-      });
+      plugin(destDir, glob(path.join(packageJsonPath, '..', packageJson.staticRoot, '*')));
     }
   }, function() {
   }));
