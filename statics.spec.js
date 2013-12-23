@@ -10,7 +10,7 @@ describe('statics', function() {
     var done = false;
 
     runs(function() {
-      collectStatic('./testdata/sample.js', './testbuild', null, function() {
+      collectStatic('./testdata/sample.js', './testbuild', function() {
         expect(function() {
           expect(fs.existsSync('./testbuild/blah.jpg')).toBe(true);
           expect(fs.readFileSync('./testbuild/yoink/doink.txt', {encoding: 'utf8'})).toBe('wtf\n');

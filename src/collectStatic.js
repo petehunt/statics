@@ -6,6 +6,7 @@ var fs = require('fs-extra');
 var glob = require('glob').sync;
 var mdeps = require('module-deps');
 var path = require('path');
+var resolve = require('resolve');
 var through = require('through');
 
 var existsCache = {};
@@ -43,11 +44,14 @@ function defaultPlugin(destDir, projectRoot, projectStaticRoot) {
   });
 }
 
-function collectStatic(entrypoint, destDir, pluginName, cb) {
+function collectStatic(entrypoint, destDir, cb) {
   var packageJsonPathsVisited = {};
-  var plugin = pluginName ? require(pluginName) : defaultPlugin;
 
-  mdeps([path.resolve(entrypoint)]).pipe(through(function(data) {
+  // streams suck, or i'm tired.
+  var semaphore = 0;
+  var called = false;
+
+  var stream = through(function(data) {
     var packageJsonPath = getPackageJsonPath(data.id);
     if (!packageJsonPath || packageJsonPathsVisited[packageJsonPath]) {
       return;
@@ -57,12 +61,44 @@ function collectStatic(entrypoint, destDir, pluginName, cb) {
 
     if (packageJson.staticRoot) {
       try {
-        plugin(destDir, path.join(packageJsonPath, '..'), packageJson.staticRoot);
+        semaphore++;
+        var pluginName = packageJson.staticPlugin;
+        var gotPlugin = function(plugin) {
+          plugin(destDir, path.join(packageJsonPath, '..'), packageJson.staticRoot);
+          semaphore--;
+          if (semaphore === 0) {
+            called = true;
+            cb();
+          }
+        }.bind(this);
+
+        if (pluginName) {
+          resolve(pluginName, {basedir: path.join(packageJsonPath, '..')}, function(err, res) {
+            if (err) {
+              console.error(err);
+              semaphore--;
+              if (semaphore === 0) {
+                called = true;
+                cb();
+              }
+              return;
+            }
+            gotPlugin(require(res));
+          }.bind(this));
+        } else {
+          gotPlugin(defaultPlugin);
+        }
       } catch (e) {
         console.error(e);
       }
     }
-  }, cb));
+  }, function() {
+    if (semaphore === 0 && !called) {
+      cb();
+    }
+  });
+
+  mdeps([path.resolve(entrypoint)]).pipe(stream);
 }
 
 module.exports = collectStatic;
