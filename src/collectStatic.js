@@ -31,13 +31,19 @@ function getPackageJsonPath(absoluteModulePath) {
   return null;
 }
 
-function defaultPlugin(destDir, files) {
+function defaultPlugin(destDir, projectRoot, projectStaticRoot) {
+  var files = glob(path.join(projectRoot, projectStaticRoot, '*'));
+  fs.mkdirpSync(destDir);
   files.forEach(function(file) {
-    fs.symlinkSync(file, path.join(destDir, path.basename(file)));
+    var destFile = path.join(destDir, path.basename(file));
+    if (fs.existsSync(destFile)) {
+      fs.unlinkSync(destFile);
+    }
+    fs.symlinkSync(file, destFile);
   });
 }
 
-function collectStatic(entrypoint, destDir, pluginName) {
+function collectStatic(entrypoint, destDir, pluginName, cb) {
   var packageJsonPathsVisited = {};
   var plugin = pluginName ? require(pluginName) : defaultPlugin;
 
@@ -50,10 +56,9 @@ function collectStatic(entrypoint, destDir, pluginName) {
     var packageJson = JSON.parse(fs.readFileSync(packageJsonPath, {encoding: 'utf8'}));
 
     if (packageJson.staticRoot) {
-      plugin(destDir, glob(path.join(packageJsonPath, '..', packageJson.staticRoot, '*')));
+      plugin(destDir, path.join(packageJsonPath, '..'), packageJson.staticRoot);
     }
-  }, function() {
-  }));
+  }, cb));
 }
 
 module.exports = collectStatic;
