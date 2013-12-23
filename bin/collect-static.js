@@ -8,7 +8,7 @@ var optimist = require('optimist')
 var argv = optimist.argv;
 
 if (argv._.length !== 2) {
-  console.error(optimist.help());
+  optimist.showHelp();
   process.exit(1);
 }
 

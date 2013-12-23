@@ -33,7 +33,7 @@ function getPackageJsonPath(absoluteModulePath) {
 
 function defaultPlugin(destDir, files) {
   files.forEach(function(file) {
-    fs.copySync(file, path.join(destDir, path.basename(file)));
+    fs.symlinkSync(file, path.join(destDir, path.basename(file)));
   });
 }
 
