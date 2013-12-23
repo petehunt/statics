@@ -56,7 +56,11 @@ function collectStatic(entrypoint, destDir, pluginName, cb) {
     var packageJson = JSON.parse(fs.readFileSync(packageJsonPath, {encoding: 'utf8'}));
 
     if (packageJson.staticRoot) {
-      plugin(destDir, path.join(packageJsonPath, '..'), packageJson.staticRoot);
+      try {
+        plugin(destDir, path.join(packageJsonPath, '..'), packageJson.staticRoot);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, cb));
 }

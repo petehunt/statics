@@ -6,9 +6,21 @@ describe('statics', function() {
     if (fs.existsSync('./testbuild')) {
       fs.removeSync('./testbuild');
     }
-    collectStatic('./testdata/sample.js', './testbuild', null, function() {
-      expect(fs.existsSync('./testbuild/blah.jpg')).toBe(true);
-      expect(fs.readFileSync('./testbuild/yoink/doink.txt', {encoding: 'utf8'})).toBe('wtf');
+
+    var done = false;
+
+    runs(function() {
+      collectStatic('./testdata/sample.js', './testbuild', null, function() {
+        expect(function() {
+          expect(fs.existsSync('./testbuild/blah.jpg')).toBe(true);
+          expect(fs.readFileSync('./testbuild/yoink/doink.txt', {encoding: 'utf8'})).toBe('wtf\n');
+          done = true;
+        }).not.toThrow();
+      });
+    });
+
+    waitsFor(function() {
+      return done;
     });
   });
 });
