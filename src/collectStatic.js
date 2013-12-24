@@ -47,6 +47,8 @@ function defaultPlugin(destDir, projectRoot, projectStaticRoot) {
 function collectStatic(entrypoint, destDir, cb) {
   var packageJsonPathsVisited = {};
 
+  cb = cb || function() {};
+
   // streams suck, or i'm tired.
   var semaphore = 0;
   var called = false;
