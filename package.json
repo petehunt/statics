@@ -1,6 +1,6 @@
 {
   "name": "statics",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "static assets in npm",
   "dependencies": {
     "glob": "~3.2.7",

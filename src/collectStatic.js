@@ -100,7 +100,10 @@ function collectStatic(entrypoint, destDir, cb) {
     }
   });
 
-  mdeps([path.resolve(entrypoint)]).pipe(stream);
+  mdeps(
+    [path.resolve(entrypoint)],
+    {transformKey: ['browserify', 'transform']}
+  ).pipe(stream);
 }
 
 module.exports = collectStatic;
