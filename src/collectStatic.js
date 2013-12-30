@@ -31,14 +31,26 @@ function getPackageJsonPath(absoluteModulePath) {
 }
 
 function defaultPlugin(destDir, projectRoot, projectStaticRoot) {
-  var files = glob(path.join(projectRoot, projectStaticRoot, '*'));
+  var files = glob(path.join(projectRoot, projectStaticRoot, '**'));
   fs.mkdirpSync(destDir);
+
   files.forEach(function(file) {
-    var destFile = path.join(destDir, path.basename(file));
+    var relativePath = path.dirname(
+      path.resolve(file).replace(
+        path.resolve(path.join(projectRoot, projectStaticRoot)),
+        ''
+      )
+    ).slice(1);
+
+    var destFile = path.join(destDir, relativePath, path.basename(file));
     if (fs.existsSync(destFile)) {
       fs.unlinkSync(destFile);
     }
-    fs.symlinkSync(file, destFile);
+
+    if (fs.statSync(file).isFile()) {
+      fs.mkdirpSync(path.dirname(destFile));
+      fs.symlinkSync(file, destFile);
+    }
   });
 }
 
