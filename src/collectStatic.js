@@ -1,6 +1,4 @@
 // Static asset collector
-// A more advanced version of this with optimizations could
-// be created in the future.
 
 var fs = require('fs-extra');
 var glob = require('glob').sync;
@@ -61,12 +59,12 @@ function collectStatic(entrypoint, destDir, cb) {
     packageJsonPathsVisited[packageJsonPath] = true;
     var packageJson = JSON.parse(fs.readFileSync(packageJsonPath, {encoding: 'utf8'}));
 
-    if (packageJson.staticRoot) {
+    if (packageJson.static && packageJson.static.root) {
       try {
         semaphore++;
-        var pluginName = packageJson.staticPlugin;
+        var pluginName = packageJson.static.plugin;
         var gotPlugin = function(plugin) {
-          plugin(destDir, path.join(packageJsonPath, '..'), packageJson.staticRoot);
+          plugin(destDir, path.join(packageJsonPath, '..'), packageJson.static.root);
           semaphore--;
           if (semaphore === 0) {
             called = true;

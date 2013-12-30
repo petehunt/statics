@@ -1,4 +1,6 @@
 {
   "name": "sample",
-  "staticRoot": "./statics"
+  "static": {
+    "root": "./statics"
+  }
 }
