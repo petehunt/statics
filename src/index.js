@@ -7,7 +7,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 
 function _getStatics(root) {
-  var files = glob.sync(path.join(root, './static/*'));
+  var files = glob.sync(path.join(root, 'static/*'));
   if (!files.length) return [];
 
   return _getStatics(path.join(root, 'node_modules/react-*'))
