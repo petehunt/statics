@@ -7,7 +7,7 @@ describe('statics', function() {
     var done = false;
 
     var fileNames = [
-      'react-components_spinner.css',
+      'statics_spinner.css',
       'react-table_table.css',
       'react-spinner2_spinner.css',
       'react-treeview_treeview.css',

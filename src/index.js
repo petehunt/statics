@@ -17,11 +17,14 @@ function _getStatics(root) {
 }
 
 function _extractModuleNameFromPath(modulePath) {
-  var matchedIndex = modulePath.lastIndexOf('react-');
+  var relativeModulePath = path.relative(process.cwd(), modulePath);
+  var matchedIndex = relativeModulePath.lastIndexOf('react-');
   // is the static folder of the current component
-  if (matchedIndex === -1) return path.basename(__dirname);
+  if (matchedIndex === -1) {
+    return path.basename(process.cwd());
+  }
 
-  var name = modulePath.slice(matchedIndex);
+  var name = relativeModulePath.slice(matchedIndex);
   return name.slice(0, name.indexOf('/'));
 }
 
