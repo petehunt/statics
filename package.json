@@ -2,6 +2,7 @@
   "name": "statics",
   "version": "0.1.0",
   "description": "Collect static assets in one place, with namespacing.",
+  "main": "src/index.js",
   "dependencies": {
     "glob": "~3.2.7",
     "optimist": "~0.6.0",
