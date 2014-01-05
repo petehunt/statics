@@ -1,1 +1,4 @@
-Component's own css.
+/*Component's own css.*/
+#header {
+  color: blue;
+}
