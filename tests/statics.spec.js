@@ -1,33 +1,38 @@
+var collectStatic = require('../src/');
+var fs = require('fs');
+var glob = require('glob');
+var path = require('path');
+
 describe('statics', function() {
-  it('should work', function() {
-    var collectStatic = require('../src/');
-    var fs = require('fs');
-    var path = require('path');
+  beforeEach(function() {
+    expect(function() {
+      collectStatic(__dirname);
+    }).not.toThrow();
+  });
 
-    var done = false;
-
-    var fileNames = [
-      'statics_spinner.css',
+  it('should have brought over all the assets and namespaced them', function() {
+    ['statics_spinner.css',
       'react-table_table.css',
       'react-spinner2_spinner.css',
       'react-treeview_treeview.css',
       'react-spinner2_spinner.png',
       'react-treeview_treeview.png'
-    ];
-
-    runs(function() {
-      expect(function() {
-        collectStatic(__dirname, function() {
-          fileNames.forEach(function(fileName) {
-            expect(fs.existsSync(path.join(__dirname, 'build/static', fileName))).toBe(true);
-          });
-          done = true;
-        });
-      }).not.toThrow();
+    ].forEach(function(fileName) {
+      expect(fs.existsSync(
+        path.join(__dirname, 'build/static', fileName))
+      ).toBe(true);
     });
+  });
 
-    waitsFor(function() {
-      return done;
+  it('should have namescaped the CSS rules and url', function() {
+    glob.sync(path.join(__dirname, 'expected/*')).forEach(function(fileName) {
+      expect(
+        fs.readFileSync(fileName, {encoding: 'utf8'}).trim()
+      ).toEqual(
+        fs.readFileSync(
+          path.join(__dirname, 'build/static', path.basename(fileName)), {encoding: 'utf8'}
+        ).trim()
+      )
     });
   });
 });
