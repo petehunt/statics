@@ -1,5 +1,7 @@
 # statics
 
+**Warning: codebase going through major changes.**
+
 ## Mission
 
 Package static assets in npm. Support client and server.
