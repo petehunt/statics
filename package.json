@@ -1,23 +1,12 @@
 {
   "name": "statics",
-  "version": "0.1.0",
-  "description": "static assets in npm",
+  "version": "0.2.0",
+  "description": "Part of commonjs asset bundling.",
   "dependencies": {
-    "glob": "~3.2.7",
-    "module-deps": "~1.1.0",
-    "resolve": "~0.6.1",
-    "through": "~2.3.4",
-    "fs-extra": "~0.8.1",
-    "optimist": "~0.6.0"
   },
   "devDependencies": {
-    "jasmine-node": "~1.12.0"
   },
   "scripts": {
-    "test": "jasmine-node statics.spec.js"
-  },
-  "bin": {
-    "collect-static": "bin/collect-static.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +18,12 @@
     "npm",
     "static",
     "assets",
-    "packaging"
+    "packaging",
+    "style",
+    "styles",
+    "css",
+    "image",
+    "images",
   ],
   "author": "Pete Hunt",
   "license": "Apache 2",
