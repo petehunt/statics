@@ -1,5 +1,7 @@
 # statics
 
+![unmaintained](http://img.shields.io/badge/status-unmaintained-red.png)
+
 **Warning: codebase going through major changes.**
 
 ## Mission
